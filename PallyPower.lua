@@ -232,6 +232,7 @@ end
 
 function PallyPowerGrid_Update()
     if not initalized then
+        PP_Debug("not yet initalized")
         PallyPower_ScanSpells()
     end
     -- Pally 1 is always myself
@@ -294,6 +295,7 @@ end
 
 function PallyPower_UpdateUI()
     if not initalized then
+        PP_Debug("not yet initalized")
         PallyPower_ScanSpells()
     end
     -- Buff Bar
@@ -381,6 +383,7 @@ function PallyPower_UpdateUI()
 end
 
 function PallyPower_ScanSpells()
+    PP_Debug("PallyPower_ScanSpells start");
     local RankInfo = {}
     local i = 1
     
@@ -392,7 +395,6 @@ function PallyPower_ScanSpells()
                 break
             end
         end
-        PallyPower_ScanInventory()
         if not spellRank or spellRank == "" then
             spellRank = PallyPower_Rank1
         end
@@ -422,6 +424,7 @@ function PallyPower_ScanSpells()
             nameTalent, icon, iconx, icony, currRank, maxRank = GetTalentInfo(t, i);
             local _, _, bless = string.find(nameTalent, PallyPower_BlessingTalentSearch)
             if bless then
+                PP_Debug("initalized = true")
                 initalized = true;
                 for id, name in PallyPower_BlessingID do
                     if name == bless then
@@ -446,14 +449,14 @@ function PallyPower_ScanSpells()
         initalized = true;
     end
     PallyPower_ScanInventory()
-    
+    PP_Debug("PallyPower_ScanSpells end");
 end
 
 function PallyPower_Refresh()
     AllPallys = {}
+    PallyPower_ScanSpells()
     PallyPower_SendSelf()
     PallyPower_RequestSend()
-    PallyPower_ScanSpells()
     PallyPower_UpdateUI()
 end
 
@@ -480,6 +483,7 @@ end
 
 function PallyPower_SendSelf()
     if not initalized then
+        PP_Debug("not yet initalized")
         PallyPower_ScanSpells()
     end
     if not AllPallys[UnitName("player")] then
@@ -805,6 +809,7 @@ function PallyPower_CanControl(name)
 end
 
 function PallyPower_ScanInventory()
+    PP_Debug("PallyPower_ScanInventory start")
     if not PP_IsPally then
         return
     end
@@ -827,6 +832,7 @@ function PallyPower_ScanInventory()
         PallyPower_SendMessage("SYMCOUNT " .. PP_Symbols);
     end
     AllPallys[UnitName("player")]["symbols"] = PP_Symbols;
+    PP_Debug("PallyPower_ScanInventory end")
 end
 
 PP_ScanInfo = nil
